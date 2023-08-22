@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping("/filmes")
 public class FilmeController {
@@ -33,7 +35,7 @@ public class FilmeController {
     public String cadastraFilme(DadosCadastroFilme dados) {
         var filme = new Filme(dados);
         repository.save(filme);
-        return "filmes/formulario";
+        return "redirect:/filmes";
     }
 
 }
