@@ -1,5 +1,6 @@
 package br.com.filmes.screenmatch.principal;
 
+import br.com.filmes.screenmatch.model.DadosEpisodios;
 import br.com.filmes.screenmatch.model.DadosSerie;
 import br.com.filmes.screenmatch.service.ConsumoAPI;
 import br.com.filmes.screenmatch.service.ConverteDados;
@@ -7,7 +8,10 @@ import br.com.filmes.screenmatch.service.IteradorDeTemporadas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class Principal {
@@ -34,5 +38,19 @@ public class Principal {
         var lista = iteradorDeTemporadas.listar(dadosSerie, ENDERECO,nomeSerie, API_KEY);
         lista.forEach(System.out::println);
         lista.forEach(dadosTemporada -> dadosTemporada.episodios().forEach(episodios -> System.out.println(episodios.titulo())));
+
+        List<DadosEpisodios> listaDadosEpisodios = lista
+                .stream()
+                .flatMap(temporada -> temporada.episodios().stream())
+                .collect(Collectors.toList());
+
+        System.out.println("\nTop 5 episódios da Série " + dadosSerie.titulo());
+        listaDadosEpisodios
+                .stream()
+                .filter(episodios -> !episodios.avaliacao().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DadosEpisodios::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
+
     }
 }
