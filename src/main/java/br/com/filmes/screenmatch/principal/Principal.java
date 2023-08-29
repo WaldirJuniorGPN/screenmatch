@@ -2,6 +2,7 @@ package br.com.filmes.screenmatch.principal;
 
 import br.com.filmes.screenmatch.model.DadosEpisodios;
 import br.com.filmes.screenmatch.model.DadosSerie;
+import br.com.filmes.screenmatch.model.Episodio;
 import br.com.filmes.screenmatch.service.ConsumoAPI;
 import br.com.filmes.screenmatch.service.ConverteDados;
 import br.com.filmes.screenmatch.service.IteradorDeTemporadas;
@@ -49,6 +50,16 @@ public class Principal {
                 .stream()
                 .filter(episodios -> !episodios.avaliacao().equalsIgnoreCase("N/A"))
                 .sorted(Comparator.comparing(DadosEpisodios::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
+
+        List<Episodio> episodios = lista.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(dadosEpisodios -> new Episodio((t.numeroTemporada()),dadosEpisodios)))
+                .collect(Collectors.toList());
+
+        episodios.stream()
+                .sorted(Comparator.comparing(Episodio::getAvaliacao).reversed())
                 .limit(5)
                 .forEach(System.out::println);
 
