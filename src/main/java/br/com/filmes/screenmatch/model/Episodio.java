@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Entity(name = "Episodio")
@@ -45,10 +46,13 @@ public class Episodio {
 
     @Override
     public String toString() {
+
+        var formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         String novaString = "Temporada: " + this.temporada +
                 "\nTitulo: " + this.titulo +
                 "\nAvaliacao: " + this.avaliacao +
-                "\nData de Lançamento: " + this.dataLancamento + "\n";
+                "\nData de Lançamento: " + this.dataLancamento.format(formatador) + "\n";
         return novaString;
     }
 }

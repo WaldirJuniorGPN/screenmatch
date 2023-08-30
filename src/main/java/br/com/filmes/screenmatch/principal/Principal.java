@@ -9,8 +9,10 @@ import br.com.filmes.screenmatch.service.IteradorDeTemporadas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class Principal {
         var dadosSerie = conversor.obterDados(json, DadosSerie.class);
         System.out.println(dadosSerie);
 
-        var lista = iteradorDeTemporadas.listar(dadosSerie, ENDERECO,nomeSerie, API_KEY);
+        var lista = iteradorDeTemporadas.listar(dadosSerie, ENDERECO, nomeSerie, API_KEY);
         lista.forEach(System.out::println);
         lista.forEach(dadosTemporada -> dadosTemporada.episodios().forEach(episodios -> System.out.println(episodios.titulo())));
 
@@ -55,13 +57,36 @@ public class Principal {
 
         List<Episodio> episodios = lista.stream()
                 .flatMap(t -> t.episodios().stream()
-                        .map(dadosEpisodios -> new Episodio((t.numeroTemporada()),dadosEpisodios)))
+                        .map(dadosEpisodios -> new Episodio((t.numeroTemporada()), dadosEpisodios)))
                 .collect(Collectors.toList());
 
-        episodios.stream()
-                .sorted(Comparator.comparing(Episodio::getAvaliacao).reversed())
-                .limit(5)
-                .forEach(System.out::println);
+        System.out.println("Digite o trecho do título que deseja");
+        var trechoTitulo = leitura.nextLine();
 
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+
+        if (episodioBuscado.isPresent()) {
+            System.out.println("Episódio encontrado!");
+            System.out.println(episodioBuscado.get());
+        }else {
+            System.out.println("Episódio não encontrado!");
+        }
+
+//        episodios.stream()
+//                .sorted(Comparator.comparing(Episodio::getAvaliacao).reversed())
+//                .limit(5)
+//                .forEach(System.out::println);
+//
+//        System.out.println("\nDigite a data para mostrar os episódios a partir dessa data: ");
+//        var ano = leitura.nextInt();
+//        leitura.nextLine();
+//        var dataBusca = LocalDate.of(ano, 1, 1);
+//
+//        episodios.stream()
+//                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+//                .forEach(System.out::println);
+//
     }
 }
