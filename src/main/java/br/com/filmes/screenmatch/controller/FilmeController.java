@@ -3,6 +3,7 @@ package br.com.filmes.screenmatch.controller;
 import br.com.filmes.screenmatch.dto.DadosCadastroFilme;
 import br.com.filmes.screenmatch.model.Filme;
 import br.com.filmes.screenmatch.repository.FilmeRepository;
+import br.com.filmes.screenmatch.service.FilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class FilmeController {
     @Autowired
     private FilmeRepository repository;
 
+    @Autowired
+    private FilmeService service;
+
     @GetMapping("/formulario")
     public String carregaPaginaFormulario() {
         return "filmes/formulario";
@@ -26,16 +30,12 @@ public class FilmeController {
 
     @GetMapping
     public String carregaPaginaListagem(Model model) {
-        var listaDeFilmes = repository.findAll();
-        model.addAttribute("lista",listaDeFilmes);
-        return "filmes/listagem";
+        return this.service.carregaPaginaListagem(model);
     }
 
     @PostMapping
     public String cadastraFilme(DadosCadastroFilme dados) {
-        var filme = new Filme(dados);
-        repository.save(filme);
-        return "redirect:/filmes";
+        return this.service.cadastra(dados);
     }
 
 }
