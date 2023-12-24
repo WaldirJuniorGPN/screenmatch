@@ -14,16 +14,10 @@ public class ScreenmatchApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		SpringApplication.run(ScreenmatchApplication.class, args);
 	}
-	@Autowired
-	private ConverteDados conversor;
-	@Autowired
-	private IteradorDeTemporadas iteradorDeTemporadas;
-	@Autowired
-	private Principal principal;
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		Principal principal = new Principal();
 		principal.exibeMenu();
 
 	}
